@@ -1,0 +1,24 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Keep the face and ear tips inside the adaptive icon's central safe area. -->
+    <path android:fillColor="#FFADC8" android:strokeColor="#512335"
+        android:strokeWidth="2.5" android:strokeLineJoin="round"
+        android:pathData="M35,29 L27,46 L45,40 Z M73,29 L63,40 L81,46 Z" />
+    <path android:fillColor="#FFF4F7" android:strokeColor="#512335"
+        android:strokeWidth="2.5"
+        android:pathData="M54,29 A28,28 0,1 1,54,85 A28,28 0,1 1,54,29 Z" />
+    <path android:fillColor="#FFD0DF"
+        android:pathData="M35,31 L31,38 L40,36 Z M73,31 L68,36 L77,38 Z" />
+    <path android:fillColor="#FFCADC"
+        android:pathData="M38,57 A4.5,2.5 0,1 1,29,57 A4.5,2.5 0,1 1,38,57 Z M79,57 A4.5,2.5 0,1 1,70,57 A4.5,2.5 0,1 1,79,57 Z" />
+    <path android:fillColor="#512335"
+        android:pathData="M46,49 A3,3 0,1 1,40,49 A3,3 0,1 1,46,49 Z M68,49 A3,3 0,1 1,62,49 A3,3 0,1 1,68,49 Z" />
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M43,48 A0.8,0.8 0,1 1,41.4,48 A0.8,0.8 0,1 1,43,48 Z M65,48 A0.8,0.8 0,1 1,63.4,48 A0.8,0.8 0,1 1,65,48 Z" />
+    <path android:fillColor="#FFADC8" android:strokeColor="#512335"
+        android:strokeWidth="2.5"
+        android:pathData="M68,66 A14,10 0,1 1,40,66 A14,10 0,1 1,68,66 Z" />
+    <path android:fillColor="#512335"
+        android:pathData="M51,66 A2.5,3 0,1 1,46,66 A2.5,3 0,1 1,51,66 Z M62,66 A2.5,3 0,1 1,57,66 A2.5,3 0,1 1,62,66 Z" />
+</vector>

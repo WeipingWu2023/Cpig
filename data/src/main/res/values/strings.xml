@@ -1,0 +1,10 @@
+<resources>
+    <string name="recording_channel">Clip recording</string>
+    <string name="notification_title">Copig</string>
+    <string name="notification_preparing">Preparing recording…</string>
+    <string name="notification_ready">Ready · tap the pig, then Record now</string>
+    <string name="cancel_setup">Cancel setup</string>
+    <string name="notification_recording">Recording · stop when the content finishes</string>
+    <string name="notification_saving">Saving your clip…</string>
+    <string name="stop_and_save">Stop and save</string>
+</resources>

@@ -1,0 +1,15 @@
+<resources>
+    <style name="Theme.Copy" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:colorAccent">#AA315F</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+    <style name="Theme.Cpig.CapturePermission" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:colorAccent">#AA315F</item>
+    </style>
+</resources>
