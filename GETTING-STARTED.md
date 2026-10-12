@@ -1,17 +1,17 @@
 # Copig: a beginner’s guide
 
-Copig saves interesting screen video and eligible playback audio on your Android phone. Captures are saved as MP4, including when the source is audio-only. You can preview a clip, share or export it, and send it directly to a Windows computer over your local network. The Android app is version **0.4**; the Windows receiver is **0.4.1**, which prevents duplicate receiver windows. The GitHub repository still uses its earlier name, **Cpig**.
+Copig saves interesting screen video and eligible playback audio on your Android phone. Captures are saved as MP4, including when the source is audio-only. You can preview a clip, share or export it, and send it directly to a Windows computer over your local network. The Android app is version **0.4.2**; the Windows receiver is **0.4.2**, which prevents duplicate receiver windows. The GitHub repository still uses its earlier name, **Cpig**.
 
 This guide starts with the ready-built downloads. Building from source is optional and is explained later.
 
 ## 1. Download the two apps
 
-Use the download links below. The Android app comes from [v0.4.0](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.0); the corrected Windows receiver comes from [v0.4.1](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.1). On a release page, expand **Assets** if necessary.
+Use the download links below. The Android app comes from [v0.4.2](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.2); the corrected Windows receiver comes from [v0.4.2](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.2). On a release page, expand **Assets** if necessary.
 
 | Device | Download | What it is |
 | --- | --- | --- |
-| Android phone | [Copig-debug.apk](https://github.com/WeipingWu2023/Cpig/releases/download/v0.4.0/Copig-debug.apk) | The Android installation file. Requires Android 10 or later. |
-| Windows computer | [Copig-Receiver-Windows-x64.zip](https://github.com/WeipingWu2023/Cpig/releases/download/v0.4.1/Copig-Receiver-Windows-x64.zip) | The portable Windows 10/11 x64 receiver, including its runtime. |
+| Android phone | [Copig-debug.apk](https://github.com/WeipingWu2023/Cpig/releases/download/v0.4.2/Copig-debug.apk) | The Android installation file. Requires Android 10 or later. |
+| Windows computer | [Copig-Receiver-Windows-x64.zip](https://github.com/WeipingWu2023/Cpig/releases/download/v0.4.2/Copig-Receiver-Windows-x64.zip) | The portable Windows 10/11 x64 receiver, including its runtime. |
 
 Download the APK on the phone and the ZIP on the computer. **Source code (zip)** is for building the project; it is not the ready-to-run Windows receiver.
 
@@ -98,7 +98,7 @@ The portable download includes .NET, so you do not need to install a separate ru
 
 Closing the window with **×** or minimizing it keeps the receiver running in the taskbar tray. Click the small up arrow near the Windows clock if the tray icons are hidden, then double-click the pink pig to reopen it. Use **Quit** in the window or tray menu to stop receiving. Unchecking **Receive files** pauses reception.
 
-If opening Copig says **Copig is already running**, reopen the existing pig near the clock. If an older version says **address already in use**, another receiver may already be running: click **Quit** in the window showing the error, then reopen the existing pig. Before replacing the receiver with version 0.4.1, use **Quit** in every older receiver window; × only hides it. If a different app such as LocalSend occupies the port, choose **53318** in Copig's **Port** box, click **Restart**, then use that port when adding the PC manually on Android.
+If opening Copig says **Copig is already running**, reopen the existing pig near the clock. If an older version says **address already in use**, another receiver may already be running: click **Quit** in the window showing the error, then reopen the existing pig. Before replacing the receiver with version 0.4.2, use **Quit** in every older receiver window; × only hides it. If a different app such as LocalSend occupies the port, choose **53318** in Copig's **Port** box, click **Restart**, then use that port when adding the PC manually on Android.
 
 The PIN stays the same while that app instance runs, including while it is in the tray. Quitting and launching the receiver again creates a new PIN. Start the receiver whenever you want to send files, or leave it available in the tray.
 
@@ -299,3 +299,27 @@ Record the exact error message and these details:
 - Whether the installed APK came from the release or your own build.
 
 See [README.md](README.md) for project scope, [LAN-TRANSFER.md](LAN-TRANSFER.md) for protocol/network details, [windows/README.md](windows/README.md) for receiver details, and [TESTING.md](TESTING.md) for the recorded verification results.
+
+## Recording quality: update 0.4.2
+
+Install the new APK over your current Copig installation. Do not uninstall first: uninstalling removes private clips. Record a NEW clip after updating; an existing blurred clip cannot regain detail that was not recorded.
+
+The old app reduced a 1080 × 2400 screen to 576 × 1280. Version 0.4.2 tries the screen resolution, up to a 2560-pixel long edge, at 30 frames per second with a bitrate that grows with the image size. A 1080 × 2400 recording requests about 14 Mbps instead of 4 Mbps. If the phone cannot prepare that size, Copig tries a 1920-pixel long edge, then 1280. Larger recordings use more storage: at 14 Mbps, video is roughly 105 MB per minute, plus audio. The phone decides which encoder sizes it accepts. Keep the phone in one orientation while recording.
+
+### If the entire video is heavily blurred but the floating pig is sharp
+
+That is different from soft small text caused by a lower resolution. It suggests the phone or source app is hiding the underlying app during screen capture. This is a diagnosis to check, not a confirmed cause on every Redmi firmware. The Windows receiver transfers the original bytes; it does not blur or compress the video.
+
+1. Record ten seconds of your phone's **Settings** screen with Copig. Stop and preview the saved file **on the phone**, before transferring it.
+2. Record ten seconds of the same video that looked blurred. Preview that file on the phone too.
+3. If Settings is clear but the video app is blurred, look for a screen-sharing protection notice in the notification panel while recording. On Redmi, search Settings or the Security app for **screen sharing protection**, **屏幕共享防护**, or **电诈防护**. Menu names vary with MIUI/HyperOS version. If a notice offers permission to continue sharing this app, review it and allow only the content you intend to record. Copig cannot override the phone's capture protections.
+4. Try the phone's built-in **Screen Recorder** on the same public video, with high resolution selected. If that works but Copig still blurs it, keep both short test clips and note whether Settings was clear. This distinguishes a third-party capture restriction from a source video problem.
+5. If the source app offers **Save video**, save that file and **Import video or audio** in Copig. This also avoids screen-recording quality loss.
+
+Do not expect the new bitrate alone to remove a privacy blur. The real-phone test is still required.
+
+### A pig shortcut on the Windows desktop
+
+The EXE now contains the pig icon in several sizes. On the original development PC, a **Copig Receiver** desktop shortcut has been created and points to the updated receiver in `D:\god\Copy\windows\publish`.
+
+For another computer, extract the Windows ZIP into a permanent folder. Right-click **Copig Receiver.exe**, choose **Show more options** if needed, then **Send to → Desktop (create shortcut)**. Alternatively, right-click the included **Create-Desktop-Shortcut.ps1** and choose **Run with PowerShell**. Keep the extracted folder in place; the shortcut opens the EXE there. Use **Quit** in an old running Copig before opening the new version.

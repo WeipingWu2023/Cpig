@@ -1,5 +1,14 @@
 # Copig verification
 
+## Android and Windows 0.4.2 update
+
+Verified on 2026-10-12. The supplied 144.89-second H.264 clip measured 576 × 1280, about 4.05 Mbps. Frames sampled at 10, 45 and 100 seconds had strong blur behind a sharp pig overlay. The user confirmed the phone display was clear during recording. Lower resolution is a confirmed quality limitation; system/source capture masking is a suspected separate cause, not proven fixed by the encoding change. No private clip or sampled frame is published.
+
+The Android build succeeded: **18 JVM tests passed**, including portrait/landscape, high-resolution limits, even dimensions and fallback-quality candidates. App and data lint finished with zero errors. The new APK is version 0.4.2, code 5, and passed signature and alignment verification with the same signing certificate as the previous APK. MediaRecorder preparation now tries screen resolution up to a 2560-pixel long edge before smaller sizes, and uses a size-dependent bitrate. Actual encoder preparation and recording on Redmi remain unverified; no phone was connected over USB.
+
+The Windows build succeeded. **28 receiver checks and five Android/Windows HTTPS interoperability checks passed**. UDP discovery was explicitly skipped to avoid interference from the existing receiver. The EXE pig icon was extracted and visually checked, and the actual desktop shortcut target, working folder and EXE icon were verified. The ZIP includes a reusable desktop-shortcut script. Higher-quality capture and the privacy-blur comparison test still need the physical phone steps in the beginner guide.
+
+
 ## Windows 0.4.1 update
 
 The receiver now prevents a second graphical instance and explains how to reopen the existing pig in the Windows tray. Port-conflict guidance distinguishes another Copig from another app such as LocalSend. The Android app is unchanged at 0.4.
@@ -53,7 +62,7 @@ Install the release APK as an update on the Redmi Note 13 / Android 14. Check ex
 
 ## Delivered file checksums (SHA-256)
 
-- `Copig-debug.apk`: `7FCEBCB73692652C27355990154EB95DEA9D0A8C95D616103687E702C4D2D128`
-- `Copig-Receiver-Windows-x64.zip` (0.4.1): `C32FB4CFF8A7CA727269EBCD0CB73DEA1E0DAA1E159212A0AE7D0B10ED8CC661`
+- `Copig-debug.apk`: `EA826FA7CF47BC282B3C3078B0DA88A233E5ECC927DB885F0E238FA4E808118F`
+- `Copig-Receiver-Windows-x64.zip` (0.4.2): `691BEB3606E267B849AF093A445D3D41E717FDAD557FAB974F54CAB0744D52FC`
 
-The Android APK is in [v0.4.0](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.0); the corrected Windows ZIP is in [v0.4.1](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.1). Both checksums appear in [SHA256SUMS.txt](SHA256SUMS.txt). The APK is a debug test build and the Windows executable is unsigned. Private signing keys and generated test data are excluded from the repository.
+The current Android APK and Windows ZIP are in [v0.4.2](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.2). Both checksums appear in [SHA256SUMS.txt](SHA256SUMS.txt). The APK is a debug test build and the Windows executable is unsigned. Private signing keys and generated test data are excluded from the repository.

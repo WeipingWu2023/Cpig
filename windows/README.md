@@ -4,7 +4,7 @@ Copig transfers saved clips directly from your Android phone to your Windows com
 
 ## Run
 
-Download the Windows ZIP from [Copig Receiver v0.4.1](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.1).
+Download the Windows ZIP from [Copig Receiver v0.4.2](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.2).
 
 1. Extract **Copig-Receiver-Windows-x64.zip** into a folder, then double-click **Copig Receiver.exe**. This portable x64 build includes .NET; there is no installer.
 2. Connect the phone and computer to the same Wi-Fi. Ethernet on the same router works too.
@@ -14,7 +14,7 @@ Download the Windows ZIP from [Copig Receiver v0.4.1](https://github.com/Weiping
 
 Closing or minimizing the window keeps Copig receiving in the taskbar tray. Double-click the pink pig to reopen it. Use **Quit** to stop the receiver, or uncheck **Receive files** to pause it. **Cancel transfer** removes unfinished data and keeps completed files.
 
-Version 0.4.1 prevents a second graphical receiver from starting while one is already running. If you see **Copig is already running**, click the small arrow near the Windows clock and double-click the pink pig. When replacing an older version, first use **Quit** in each old Copig receiver window. The older version did not have this safeguard.
+Version 0.4.2 prevents a second graphical receiver from starting while one is already running. If you see **Copig is already running**, click the small arrow near the Windows clock and double-click the pink pig. When replacing an older version, first use **Quit** in each old Copig receiver window. The older version did not have this safeguard.
 
 If discovery fails, enter the Windows app's IPv4 address and port manually in Android. Guest Wi-Fi, router client isolation, VPNs and a blocked firewall can prevent local transfers. If LocalSend already occupies port 53317, close it or choose another receiver port and press **Restart**, then enter that port on Android.
 
@@ -48,3 +48,5 @@ Use the graphical app for normal use; it chooses a cryptographically random PIN.
 If preparing a transfer is interrupted before the phone receives the response, that unused reservation expires within one minute. **Cancel transfer** on Windows releases it immediately. An interrupted upload can be sent again; completed clips stay intact.
 
 Protocol reference: [LocalSend protocol v2.2](https://github.com/localsend/protocol). Copig is an independent implementation and is not affiliated with LocalSend. File download / browser sharing endpoints are not implemented (`download: false`).
+
+The executable has the pink pig file icon. To add a desktop shortcut, keep the extracted folder in place, right-click Copig Receiver.exe and choose Send to → Desktop (create shortcut), or run the included Create-Desktop-Shortcut.ps1 with PowerShell.

@@ -53,19 +53,30 @@ internal class CaptureEngine(private val context: Context, private val projectio
             val metrics = DisplayMetrics()
             @Suppress("DEPRECATION")
             context.getSystemService(WindowManager::class.java).defaultDisplay.getRealMetrics(metrics)
-            val scale = minOf(1f, 1280f / maxOf(metrics.widthPixels, metrics.heightPixels))
-            val width = maxOf(2, (metrics.widthPixels * scale).toInt() / 2 * 2)
-            val height = maxOf(2, (metrics.heightPixels * scale).toInt() / 2 * 2)
-            recorder.apply {
-                setVideoSource(MediaRecorder.VideoSource.SURFACE)
-                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                setVideoEncoder(MediaRecorder.VideoEncoder.H264)
-                setVideoSize(width, height)
-                setVideoFrameRate(30)
-                setVideoEncodingBitRate(4_000_000)
-                setOutputFile(video.absolutePath)
-                prepare()
+            var quality: CaptureQuality? = null
+            var preparationError: Exception? = null
+            // Try smaller canvases only if this phone's recorder rejects the higher quality.
+            // Prepare before creating the display: Android 14 permits only one display per consent.
+            for (candidate in CaptureQuality.candidates(metrics.widthPixels, metrics.heightPixels)) {
+                try {
+                    recorder.reset()
+                    recorder.setVideoSource(MediaRecorder.VideoSource.SURFACE)
+                    recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                    recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264)
+                    recorder.setVideoSize(candidate.width, candidate.height)
+                    recorder.setVideoFrameRate(30)
+                    recorder.setVideoEncodingBitRate(candidate.bitRate)
+                    recorder.setOutputFile(video.absolutePath)
+                    recorder.prepare()
+                    quality = candidate
+                    break
+                } catch (error: IOException) {
+                    preparationError = error
+                } catch (error: RuntimeException) {
+                    preparationError = error
+                }
             }
+            val selected = quality ?: throw IOException("This phone could not prepare screen recording", preparationError)
             val config = AudioPlaybackCaptureConfiguration.Builder(projection)
                 .addMatchingUsage(AudioAttributes.USAGE_MEDIA)
                 .addMatchingUsage(AudioAttributes.USAGE_GAME)
@@ -79,7 +90,7 @@ internal class CaptureEngine(private val context: Context, private val projectio
             audio = input
             check(input.state == AudioRecord.STATE_INITIALIZED) { "Playback audio could not initialize" }
             check(!stop) { "Capture was cancelled before recording started" }
-            display = projection.createVirtualDisplay("Copig", width, height, metrics.densityDpi,
+            display = projection.createVirtualDisplay("Copig", selected.width, selected.height, metrics.densityDpi,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, recorder.surface, null, null)
             val videoStart = SystemClock.elapsedRealtimeNanos()
             recorder.start()

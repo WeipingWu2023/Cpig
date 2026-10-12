@@ -12,6 +12,7 @@ if (-not $PackageOnly) {
 }
 if (-not (Test-Path -LiteralPath (Join-Path $output 'Copig Receiver.exe'))) { throw 'Publish the receiver before packaging it.' }
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'README.md') -Destination $output -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Create-Desktop-Shortcut.ps1') -Destination $output -Force
 $runtimeConfig = Join-Path $PSScriptRoot 'Copig.Receiver\bin\Release\net10.0-windows\win-x64\Copig Receiver.runtimeconfig.json'
 $frameworks = (Get-Content -LiteralPath $runtimeConfig -Raw | ConvertFrom-Json).runtimeOptions.includedFrameworks
 $cacheLine = & $dotnetCommand nuget locals global-packages --list
