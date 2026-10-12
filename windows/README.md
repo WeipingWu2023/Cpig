@@ -4,7 +4,7 @@ Copig transfers saved clips directly from your Android phone to your Windows com
 
 ## Run
 
-Download the Windows ZIP from [Copig v0.4.0](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.0).
+Download the Windows ZIP from [Copig Receiver v0.4.1](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.1).
 
 1. Extract **Copig-Receiver-Windows-x64.zip** into a folder, then double-click **Copig Receiver.exe**. This portable x64 build includes .NET; there is no installer.
 2. Connect the phone and computer to the same Wi-Fi. Ethernet on the same router works too.
@@ -13,6 +13,8 @@ Download the Windows ZIP from [Copig v0.4.0](https://github.com/WeipingWu2023/Cp
 5. Received files appear in **Downloads\Copig**. Use **Open folder** to see them or **Change folder** to choose another destination.
 
 Closing or minimizing the window keeps Copig receiving in the taskbar tray. Double-click the pink pig to reopen it. Use **Quit** to stop the receiver, or uncheck **Receive files** to pause it. **Cancel transfer** removes unfinished data and keeps completed files.
+
+Version 0.4.1 prevents a second graphical receiver from starting while one is already running. If you see **Copig is already running**, click the small arrow near the Windows clock and double-click the pink pig. When replacing an older version, first use **Quit** in each old Copig receiver window. The older version did not have this safeguard.
 
 If discovery fails, enter the Windows app's IPv4 address and port manually in Android. Guest Wi-Fi, router client isolation, VPNs and a blocked firewall can prevent local transfers. If LocalSend already occupies port 53317, close it or choose another receiver port and press **Restart**, then enter that port on Android.
 
@@ -26,6 +28,8 @@ For a fresh clone, install the official .NET 10 SDK, open PowerShell at the repo
 .\windows\build-windows.ps1
 .\windows\test-receiver.ps1
 ```
+
+Close normal receiver instances before the full test. To keep an existing receiver running, use `test-receiver.ps1 -SkipDiscovery`: this runs 28 file-transfer/security checks and explicitly skips the shared UDP discovery check. The default full test runs all 29 checks.
 
 `-PackageOnly` updates the ZIP from an existing successful publish without rebuilding the executable. `-FrameworkDependent` creates a development build that requires the .NET 10 Windows Desktop and ASP.NET Core runtimes on the receiving computer; use the default build for the portable release.
 

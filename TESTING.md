@@ -1,4 +1,12 @@
-# Copig 0.4 verification
+# Copig verification
+
+## Windows 0.4.1 update
+
+The receiver now prevents a second graphical instance and explains how to reopen the existing pig in the Windows tray. Port-conflict guidance distinguishes another Copig from another app such as LocalSend. The Android app is unchanged at 0.4.
+
+The Windows 0.4.1 build succeeded. **28 receiver checks and five Android/Windows HTTPS interoperability checks passed**. The full discovery test was attempted, but timed out while the user's existing Copig receiver owned the shared UDP discovery port. The repeat used `windows/test-receiver.ps1 -SkipDiscovery`; this explicitly skips discovery without stopping the user's receiver. Automatic discovery and the new duplicate-window message still need a desktop acceptance check after quitting all old receivers. No user's running receiver was stopped.
+
+## Android 0.4 and Windows 0.4.0 baseline
 
 Verified again on 2026-10-12 in the Windows development workspace. These checks establish build and protocol behavior; they do not replace a Redmi-to-Windows physical Wi-Fi test.
 
@@ -46,6 +54,6 @@ Install the release APK as an update on the Redmi Note 13 / Android 14. Check ex
 ## Delivered file checksums (SHA-256)
 
 - `Copig-debug.apk`: `7FCEBCB73692652C27355990154EB95DEA9D0A8C95D616103687E702C4D2D128`
-- `Copig-Receiver-Windows-x64.zip`: `6E2B2D0499AE4062364564E79B2DB360885CE6E8E00C5384600BEBFDFDB207E3`
+- `Copig-Receiver-Windows-x64.zip` (0.4.1): `C32FB4CFF8A7CA727269EBCD0CB73DEA1E0DAA1E159212A0AE7D0B10ED8CC661`
 
-These match the assets in the [Copig 0.4 test release](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.0) and [SHA256SUMS.txt](SHA256SUMS.txt). The APK is a debug test build and the Windows executable is unsigned. Private signing keys and generated test data are excluded from the repository.
+The Android APK is in [v0.4.0](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.0); the corrected Windows ZIP is in [v0.4.1](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.1). Both checksums appear in [SHA256SUMS.txt](SHA256SUMS.txt). The APK is a debug test build and the Windows executable is unsigned. Private signing keys and generated test data are excluded from the repository.

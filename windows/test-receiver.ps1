@@ -1,4 +1,4 @@
-param([string]$ReceiverPath)
+param([string]$ReceiverPath, [switch]$SkipDiscovery)
 $ErrorActionPreference = 'Stop'
 $workspace = Split-Path -Parent $PSScriptRoot
 $testRoot = Join-Path $PSScriptRoot 'test-output'
@@ -69,6 +69,9 @@ try {
     $register = Request 'register' 'POST' @{alias = 'Test phone';version='2.2'}
     Check ($register.Code -eq 200 -and $register.Json.fingerprint -eq $observed) 'Register response matches server identity'
 
+    if ($SkipDiscovery) {
+        Write-Host 'SKIP: UDP discovery (an existing receiver can intercept the shared discovery port)'
+    } else {
     $client = New-Object System.Net.Sockets.UdpClient
     $client.Client.ReceiveTimeout = 3000
     $packet = $utf8.GetBytes('{"alias":"test","version":"2.2","fingerprint":"test-phone","announce":true}')
@@ -78,6 +81,7 @@ try {
         $discovered = $utf8.GetString($client.Receive([ref]$endpoint)) | ConvertFrom-Json
         Check ($discovered.fingerprint -eq $observed -and $discovered.announce -eq $false) 'UDP discovery responds to announcement'
     } finally { $client.Dispose() }
+    }
 
     $clip = Join-Path $runRoot 'clip.mp4'
     $bytes = New-Object byte[] 196619

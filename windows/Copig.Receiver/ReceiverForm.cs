@@ -142,7 +142,9 @@ internal sealed class ReceiverForm : Form
         }
         catch (Exception error) when (error is IOException or UnauthorizedAccessException or System.Net.Sockets.SocketException or CryptographicException)
         {
-            status.Text = "Could not start: " + error.Message + "\nIf LocalSend is already running, close it or choose another port and press Restart.";
+            status.Text = "Could not start: " + error.Message +
+                "\nAnother Copig may already be running near the Windows clock. Use Quit in this window, then open the existing pink pig." +
+                "\nIf another app such as LocalSend uses this port, change Port to 53318 and press Restart.";
             if (server is not null) { await server.DisposeAsync(); server = null; }
         }
         finally { restart.Enabled = true; }

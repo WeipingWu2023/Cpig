@@ -1,17 +1,17 @@
 # Copig: a beginner’s guide
 
-Copig saves interesting screen video and eligible playback audio on your Android phone. Captures are saved as MP4, including when the source is audio-only. You can preview a clip, share or export it, and send it directly to a Windows computer over your local network. The Android app is version **0.4**; the release is tagged **v0.4.0**. The GitHub repository still uses its earlier name, **Cpig**.
+Copig saves interesting screen video and eligible playback audio on your Android phone. Captures are saved as MP4, including when the source is audio-only. You can preview a clip, share or export it, and send it directly to a Windows computer over your local network. The Android app is version **0.4**; the Windows receiver is **0.4.1**, which prevents duplicate receiver windows. The GitHub repository still uses its earlier name, **Cpig**.
 
 This guide starts with the ready-built downloads. Building from source is optional and is explained later.
 
 ## 1. Download the two apps
 
-Open the [Copig v0.4.0 release page](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.0) and expand **Assets** if necessary.
+Use the download links below. The Android app comes from [v0.4.0](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.0); the corrected Windows receiver comes from [v0.4.1](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.1). On a release page, expand **Assets** if necessary.
 
 | Device | Download | What it is |
 | --- | --- | --- |
 | Android phone | [Copig-debug.apk](https://github.com/WeipingWu2023/Cpig/releases/download/v0.4.0/Copig-debug.apk) | The Android installation file. Requires Android 10 or later. |
-| Windows computer | [Copig-Receiver-Windows-x64.zip](https://github.com/WeipingWu2023/Cpig/releases/download/v0.4.0/Copig-Receiver-Windows-x64.zip) | The portable Windows 10/11 x64 receiver, including its runtime. |
+| Windows computer | [Copig-Receiver-Windows-x64.zip](https://github.com/WeipingWu2023/Cpig/releases/download/v0.4.1/Copig-Receiver-Windows-x64.zip) | The portable Windows 10/11 x64 receiver, including its runtime. |
 
 Download the APK on the phone and the ZIP on the computer. **Source code (zip)** is for building the project; it is not the ready-to-run Windows receiver.
 
@@ -97,6 +97,8 @@ Use **Copy learning prompt** to copy an explanation prompt separately. Paste it 
 The portable download includes .NET, so you do not need to install a separate runtime to use it. Starting the app does not require administrator privileges; changing a firewall rule may require them.
 
 Closing the window with **×** or minimizing it keeps the receiver running in the taskbar tray. Click the small up arrow near the Windows clock if the tray icons are hidden, then double-click the pink pig to reopen it. Use **Quit** in the window or tray menu to stop receiving. Unchecking **Receive files** pauses reception.
+
+If opening Copig says **Copig is already running**, reopen the existing pig near the clock. If an older version says **address already in use**, another receiver may already be running: click **Quit** in the window showing the error, then reopen the existing pig. Before replacing the receiver with version 0.4.1, use **Quit** in every older receiver window; × only hides it. If a different app such as LocalSend occupies the port, choose **53318** in Copig's **Port** box, click **Restart**, then use that port when adding the PC manually on Android.
 
 The PIN stays the same while that app instance runs, including while it is in the tray. Quitting and launching the receiver again creates a new PIN. Start the receiver whenever you want to send files, or leave it available in the tray.
 

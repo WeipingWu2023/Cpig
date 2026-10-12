@@ -30,7 +30,18 @@ internal static class Program
             return;
         }
         ApplicationConfiguration.Initialize();
-        Application.Run(new ReceiverForm());
+        using var instance = new Mutex(false, @"Local\Copig.Receiver.Window");
+        bool ownsInstance;
+        try { ownsInstance = instance.WaitOne(0); }
+        catch (AbandonedMutexException) { ownsInstance = true; }
+        if (!ownsInstance)
+        {
+            MessageBox.Show("Copig Receiver is already running.\n\nClick the small arrow near the Windows clock, then double-click the pink pig to open it.\n\nUse Quit in Copig when you want to stop it. Closing with × keeps it running.",
+                "Copig is already running", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+        try { Application.Run(new ReceiverForm()); }
+        finally { instance.ReleaseMutex(); }
     }
 
     private static string? Argument(string[] args, string key)
