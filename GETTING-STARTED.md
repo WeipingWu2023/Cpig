@@ -1,17 +1,17 @@
 # Copig: a beginner’s guide
 
-Copig saves interesting screen video and eligible playback audio on your Android phone. Captures are saved as MP4, including when the source is audio-only. You can preview a clip, share or export it, and send it directly to a Windows computer over your local network. The Android app is version **0.4.2**; the Windows receiver is **0.4.2**, which prevents duplicate receiver windows. The GitHub repository still uses its earlier name, **Cpig**.
+Copig saves interesting screen video and eligible playback audio on your Android phone. Video recordings are saved as MP4, including when the source is audio-only. Screenshots are saved as PNG images. You can preview a clip, share or export it, and send it directly to a Windows computer over your local network. The Android app is version **0.5.0**; the Windows receiver is **0.5.0**, which prevents duplicate receiver windows. The GitHub repository still uses its earlier name, **Cpig**.
 
 This guide starts with the ready-built downloads. Building from source is optional and is explained later.
 
 ## 1. Download the two apps
 
-Use the download links below. The Android app comes from [v0.4.2](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.2); the corrected Windows receiver comes from [v0.4.2](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.2). On a release page, expand **Assets** if necessary.
+Use the download links below. The Android app comes from [v0.5.0](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.5.0); the corrected Windows receiver comes from [v0.5.0](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.5.0). On a release page, expand **Assets** if necessary.
 
 | Device | Download | What it is |
 | --- | --- | --- |
-| Android phone | [Copig-debug.apk](https://github.com/WeipingWu2023/Cpig/releases/download/v0.4.2/Copig-debug.apk) | The Android installation file. Requires Android 10 or later. |
-| Windows computer | [Copig-Receiver-Windows-x64.zip](https://github.com/WeipingWu2023/Cpig/releases/download/v0.4.2/Copig-Receiver-Windows-x64.zip) | The portable Windows 10/11 x64 receiver, including its runtime. |
+| Android phone | [Copig-debug.apk](https://github.com/WeipingWu2023/Cpig/releases/download/v0.5.0/Copig-debug.apk) | The Android installation file. Requires Android 10 or later. |
+| Windows computer | [Copig-Receiver-Windows-x64.zip](https://github.com/WeipingWu2023/Cpig/releases/download/v0.5.0/Copig-Receiver-Windows-x64.zip) | The portable Windows 10/11 x64 receiver, including its runtime. |
 
 Download the APK on the phone and the ZIP on the computer. **Source code (zip)** is for building the project; it is not the ready-to-run Windows receiver.
 
@@ -82,7 +82,7 @@ To test export, save a copy to Downloads, open it in the phone’s File Manager,
 
 Use **Copy learning prompt** to copy an explanation prompt separately. Paste it alongside your clip in an AI workflow that accepts that media. The receiving app decides which attachments it supports; Copig does not contain an AI model or upload clips automatically.
 
-**Import video or audio** lets you add an existing MP4, WebM, M4A, MP3, WAV, or OGG file. You can also share an actual media file to Copig from another app. A shared web link is not downloaded in this version. If a source blocks recording but offers its own save/share feature, use that file and import it instead.
+**Import video, audio or PNG** lets you add an existing MP4, WebM, M4A, MP3, WAV, OGG, or PNG file. You can also share an actual media file to Copig from another app. A shared web link is not downloaded in this version. If a source blocks recording but offers its own save/share feature, use that file and import it instead.
 
 ## 6. Start the Windows receiver
 
@@ -110,7 +110,7 @@ The PIN stays the same while that app instance runs, including while it is in th
 4. Wait for a nearby computer to appear. Check that its name and IP match the Windows receiver, then select it.
 5. Enter the **current six-digit PIN** shown on Windows. Tap **Send**.
 6. Expect stages such as **Checking file…**, **Waiting for…**, and **Sending to…**. Progress appears on Android and Windows.
-7. Wait for **Sent to…** on Android. On Windows, click **Open folder** and play the received MP4. It should show the same content and sound as the phone’s preview.
+7. Wait for **Sent to…** on Android. On Windows, click **Open folder** and play the received file. Videos should show the same content and sound as the phone’s preview; screenshots should open as clear PNG images.
 
 Only the clip you selected is sent. Its original stays on the phone. Sending the same filename again creates another copy on Windows instead of overwriting an existing file. File length and SHA-256 are checked before a completed file is exposed.
 
@@ -314,7 +314,7 @@ That is different from soft small text caused by a lower resolution. It suggests
 2. Record ten seconds of the same video that looked blurred. Preview that file on the phone too.
 3. If Settings is clear but the video app is blurred, look for a screen-sharing protection notice in the notification panel while recording. On Redmi, search Settings or the Security app for **screen sharing protection**, **屏幕共享防护**, or **电诈防护**. Menu names vary with MIUI/HyperOS version. If a notice offers permission to continue sharing this app, review it and allow only the content you intend to record. Copig cannot override the phone's capture protections.
 4. Try the phone's built-in **Screen Recorder** on the same public video, with high resolution selected. If that works but Copig still blurs it, keep both short test clips and note whether Settings was clear. This distinguishes a third-party capture restriction from a source video problem.
-5. If the source app offers **Save video**, save that file and **Import video or audio** in Copig. This also avoids screen-recording quality loss.
+5. If the source app offers **Save video**, save that file and **Import video, audio or PNG** in Copig. This also avoids screen-recording quality loss.
 
 Do not expect the new bitrate alone to remove a privacy blur. The real-phone test is still required.
 
@@ -323,3 +323,27 @@ Do not expect the new bitrate alone to remove a privacy blur. The real-phone tes
 The EXE now contains the pig icon in several sizes. On the original development PC, a **Copig Receiver** desktop shortcut has been created and points to the updated receiver in `D:\god\Copy\windows\publish`.
 
 For another computer, extract the Windows ZIP into a permanent folder. Right-click **Copig Receiver.exe**, choose **Show more options** if needed, then **Send to → Desktop (create shortcut)**. Alternatively, right-click the included **Create-Desktop-Shortcut.ps1** and choose **Run with PowerShell**. Keep the extracted folder in place; the shortcut opens the EXE there. Use **Quit** in an old running Copig before opening the new version.
+
+## Take a screenshot: update 0.5.0
+
+A screenshot is one still picture of the screen. It is useful for diagrams, instructions, text or a paused video. Install the new APK as an update over your existing Copig app to keep your saved files.
+
+1. Open Copig and enable floating controls. Then open the app containing the screen you want to save.
+2. Tap the small pig at the screen edge, then tap **Screenshot**.
+3. Approve Android's screen-capture prompt. Choose **Entire screen** to capture whichever app you are looking at. If you choose a single app, only that app is captured. Screenshot setup does not ask for audio permission.
+4. Return to the screen you want to save. Nothing has been saved yet. You can shrink the controls using **×** while finding your content.
+5. Tap the pig, then **Take screenshot**. The controls disappear briefly so they stay out of the picture, then the pig returns. Wait for **Screenshot saved**.
+6. Open Copig. Find the new `.png` file under **Your clips and screenshots**. Tap **Preview screenshot** to check the image.
+7. Use **Share file**, **Save a copy to Files**, or **Send to computer**. Saving a copy to Downloads makes an independent PNG you can find with the phone's File Manager. Sending to Windows uses the same receiver, Wi-Fi and PIN as video transfer.
+
+Repeat from **Screenshot** for the next picture. Each completed screenshot ends its capture session; Android asks for fresh consent next time. Unused Ready setup expires after four minutes. Screenshots are unavailable during a video recording; finish that recording first. If you opened screenshot setup and then choose **Record now**, Copig asks for audio permission if needed before recording.
+
+The screenshot uses the screen's resolution and lossless PNG compression. Protected apps may hide or blur their content in a screenshot, just as they can during video capture. Check the earlier recording-quality comparison steps if this happens.
+
+### First screenshot test
+
+Take a screenshot of Settings, where text is easy to check. The saved image should show readable text without the pig or its buttons. Preview it on the phone, export one copy to Downloads, and send another to Windows. Open the Windows PNG and compare the same text. Cancel the capture prompt once and confirm that no new picture appears. Then record a short video to confirm the normal Record/Stop flow still works. These steps need the actual phone; automated transfer checks cannot replace them.
+
+### Updated Windows desktop icon
+
+Only the Windows EXE and desktop shortcut have changed to the pig on a rounded rectangle with transparent corners. The Android app icon and floating pig keep their existing appearance. On the original PC, the **Copig Receiver** desktop shortcut has already been updated. For another PC, extract the new ZIP into a permanent folder and run **Create-Desktop-Shortcut.ps1**, or create a desktop shortcut from the EXE. Keep `copig.ico` beside the EXE when using the script. Use **Quit** in an old running receiver before opening the new version.

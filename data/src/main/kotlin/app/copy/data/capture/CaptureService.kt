@@ -43,6 +43,7 @@ class CaptureService : Service() {
         when (intent?.action) {
             PREPARE -> prepare(requireNotNull(intent))
             RECORD -> startRecording()
+            SCREENSHOT -> takeScreenshot()
             STOP -> stopRecording()
             else -> finish("Capture setup ended.")
         }
@@ -70,7 +71,7 @@ class CaptureService : Service() {
             readyExpiryJob = scope.launch {
                 delay(4 * 60_000L)
                 if (dependencies.capture.phase.value == CapturePhase.Ready) {
-                    finish("Capture setup expired. Tap floating Record to approve again.")
+                    finish("Capture setup expired. Tap Record or Screenshot to approve again.")
                 }
             }
         } catch (error: Exception) { finish("Could not prepare capture: ${error.message}") }
@@ -109,7 +110,31 @@ class CaptureService : Service() {
         engine?.let {
             it.requestStop()
             update(CapturePhase.Saving)
-        } ?: finish("Capture setup cancelled. No clip was recorded.")
+        } ?: run {
+            captureJob?.cancel()
+            finish("Capture cancelled. No new screenshot or recording was saved.")
+        }
+    }
+
+    private fun takeScreenshot() {
+        if (ending || captureJob != null) return
+        if (dependencies.capture.stopRequested) { finish("Capture setup cancelled."); return }
+        val token = projection ?: run { finish("Approve screen capture before taking a screenshot."); return }
+        readyExpiryJob?.cancel()
+        readyExpiryJob = null
+        update(CapturePhase.Preparing)
+        captureJob = scope.launch {
+            try {
+                val screenshot = withContext(Dispatchers.IO) {
+                    ScreenshotEngine(this@CaptureService, token).capture {
+                        scope.launch { if (!ending) update(CapturePhase.Saving) }
+                    }
+                }
+                dependencies.clips.recorded(screenshot, false)
+                finish("Screenshot saved. Ready to preview, share or send to your computer.")
+            } catch (cancelled: CancellationException) { throw cancelled }
+            catch (error: Exception) { finish("Screenshot failed: ${error.message ?: error.javaClass.simpleName}") }
+        }
     }
     private fun update(phase: CapturePhase) {
         dependencies.capture.update(phase)
@@ -165,6 +190,7 @@ class CaptureService : Service() {
     companion object {
         internal const val PREPARE = "app.copy.PREPARE"
         internal const val RECORD = "app.copy.RECORD"
+        internal const val SCREENSHOT = "app.copy.SCREENSHOT"
         internal const val STOP = "app.copy.STOP"
         internal const val CONSENT = "consent"
         internal const val RESULT = "result"

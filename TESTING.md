@@ -1,5 +1,16 @@
 # Copig verification
 
+## Android and Windows 0.5.0 update
+
+Verified on 2026-10-12. Both builds succeeded. **19 JVM tests passed**, including screenshot row padding, pixel gaps, buffer position, incomplete-buffer rejection, PNG MIME policy and safe PNG provider resolution. App and data lint finished with zero errors. APK version 0.5.0/code 6 passed signature and alignment checks using the same certificate as previous builds.
+
+**28 Windows receiver checks and six Android/Windows HTTPS checks passed**. The extra interoperability check generated a real PNG, sent it through the compiled Android HTTPS class, verified exact received bytes and decoded the image pixels on Windows. UDP discovery was explicitly skipped while an existing receiver was active.
+
+The Windows-only rounded rectangle icon was embedded at seven sizes and its EXE resource was visually checked. The actual desktop shortcut target and bundled ICO path were verified. Android artwork was unchanged. A read-only review checked screenshot permissions/session ownership, cancellation/timeout, resource cleanup, overlay restoration and PNG storage/share/export/LAN paths.
+
+No phone was connected over USB. Real Redmi screen capture, floating-control exclusion, permission denial and screenshot-to-video switching still require the screenshot acceptance steps in the beginner guide. PNG-transfer tests do not establish that a protected source app permits screen capture.
+
+
 ## Android and Windows 0.4.2 update
 
 Verified on 2026-10-12. The supplied 144.89-second H.264 clip measured 576 × 1280, about 4.05 Mbps. Frames sampled at 10, 45 and 100 seconds had strong blur behind a sharp pig overlay. The user confirmed the phone display was clear during recording. Lower resolution is a confirmed quality limitation; system/source capture masking is a suspected separate cause, not proven fixed by the encoding change. No private clip or sampled frame is published.
@@ -62,7 +73,7 @@ Install the release APK as an update on the Redmi Note 13 / Android 14. Check ex
 
 ## Delivered file checksums (SHA-256)
 
-- `Copig-debug.apk`: `EA826FA7CF47BC282B3C3078B0DA88A233E5ECC927DB885F0E238FA4E808118F`
-- `Copig-Receiver-Windows-x64.zip` (0.4.2): `691BEB3606E267B849AF093A445D3D41E717FDAD557FAB974F54CAB0744D52FC`
+- `Copig-debug.apk`: `E46382532656B5EAC70248B55F85367809BC24664EEC0B6F0133CC5C77BD62AD`
+- `Copig-Receiver-Windows-x64.zip` (0.5.0): `13CF32FDD811A6927479AC32D8A6F244EBB7D6B8EC0A40DA84DDB5A4EC1F8FEF`
 
-The current Android APK and Windows ZIP are in [v0.4.2](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.2). Both checksums appear in [SHA256SUMS.txt](SHA256SUMS.txt). The APK is a debug test build and the Windows executable is unsigned. Private signing keys and generated test data are excluded from the repository.
+The current Android APK and Windows ZIP are in [v0.5.0](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.5.0). Both checksums appear in [SHA256SUMS.txt](SHA256SUMS.txt). The APK is a debug test build and the Windows executable is unsigned. Private signing keys and generated test data are excluded from the repository.

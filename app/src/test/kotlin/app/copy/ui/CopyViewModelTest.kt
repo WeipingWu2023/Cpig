@@ -231,6 +231,7 @@ class CopyViewModelTest {
         var stopped = false
         var recordCalls = 0
         override fun record() { recordCalls++ }
+        override fun screenshot() = Unit
         override fun stop() { stopped = true }
     }
     private class FakeLan : LanTransferRepository {

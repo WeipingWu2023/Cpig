@@ -1,10 +1,10 @@
 # Copig Receiver for Windows
 
-Copig transfers saved clips directly from your Android phone to your Windows computer on the same local network. Files stay on your devices. The receiver implements LocalSend's HTTPS upload protocol v2.2 and multicast discovery; a six-digit PIN is always required.
+Copig transfers saved clips and PNG screenshots directly from your Android phone to your Windows computer on the same local network. Files stay on your devices. The receiver implements LocalSend's HTTPS upload protocol v2.2 and multicast discovery; a six-digit PIN is always required.
 
 ## Run
 
-Download the Windows ZIP from [Copig Receiver v0.4.2](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.4.2).
+Download the Windows ZIP from [Copig Receiver v0.5.0](https://github.com/WeipingWu2023/Cpig/releases/tag/v0.5.0).
 
 1. Extract **Copig-Receiver-Windows-x64.zip** into a folder, then double-click **Copig Receiver.exe**. This portable x64 build includes .NET; there is no installer.
 2. Connect the phone and computer to the same Wi-Fi. Ethernet on the same router works too.
@@ -14,7 +14,7 @@ Download the Windows ZIP from [Copig Receiver v0.4.2](https://github.com/Weiping
 
 Closing or minimizing the window keeps Copig receiving in the taskbar tray. Double-click the pink pig to reopen it. Use **Quit** to stop the receiver, or uncheck **Receive files** to pause it. **Cancel transfer** removes unfinished data and keeps completed files.
 
-Version 0.4.2 prevents a second graphical receiver from starting while one is already running. If you see **Copig is already running**, click the small arrow near the Windows clock and double-click the pink pig. When replacing an older version, first use **Quit** in each old Copig receiver window. The older version did not have this safeguard.
+Version 0.5.0 prevents a second graphical receiver from starting while one is already running. If you see **Copig is already running**, click the small arrow near the Windows clock and double-click the pink pig. When replacing an older version, first use **Quit** in each old Copig receiver window. The older version did not have this safeguard.
 
 If discovery fails, enter the Windows app's IPv4 address and port manually in Android. Guest Wi-Fi, router client isolation, VPNs and a blocked firewall can prevent local transfers. If LocalSend already occupies port 53317, close it or choose another receiver port and press **Restart**, then enter that port on Android.
 
@@ -50,3 +50,5 @@ If preparing a transfer is interrupted before the phone receives the response, t
 Protocol reference: [LocalSend protocol v2.2](https://github.com/localsend/protocol). Copig is an independent implementation and is not affiliated with LocalSend. File download / browser sharing endpoints are not implemented (`download: false`).
 
 The executable has the pink pig file icon. To add a desktop shortcut, keep the extracted folder in place, right-click Copig Receiver.exe and choose Send to → Desktop (create shortcut), or run the included Create-Desktop-Shortcut.ps1 with PowerShell.
+
+Version 0.5.0 uses a rounded rectangle pig icon for the Windows EXE and desktop shortcut. The package includes copig.ico; keep it beside the EXE so the desktop-shortcut script can use it. Android artwork is unchanged. PNG screenshots appear in the same receiving folder as videos and can be opened with Windows Photos.

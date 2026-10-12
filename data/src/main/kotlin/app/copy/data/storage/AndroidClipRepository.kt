@@ -1,6 +1,7 @@
 package app.copy.data.storage
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.net.Uri
@@ -68,14 +69,28 @@ class AndroidClipRepository(private val context: Context) : ClipRepository {
                             }
                         }
                     }
-                    val extractor = MediaExtractor()
-                    try {
-                        extractor.setDataSource(temp.absolutePath)
-                        check((0 until extractor.trackCount).any {
-                            val mime = extractor.getTrackFormat(it).getString(MediaFormat.KEY_MIME).orEmpty()
-                            mime.startsWith("audio/") || mime.startsWith("video/")
-                        }) { "This file has no readable media tracks" }
-                    } finally { extractor.release() }
+                    if (extension == "png") {
+                        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                        BitmapFactory.decodeFile(temp.absolutePath, options)
+                        check(options.outMimeType == "image/png" && options.outWidth > 0 && options.outHeight > 0 &&
+                            options.outWidth.toLong() * options.outHeight <= 100_000_000L) { "This file is not a readable PNG image" }
+                        // Validate actual image data without allocating an unbounded imported bitmap.
+                        options.inJustDecodeBounds = false
+                        options.inSampleSize = 1
+                        while (maxOf(options.outWidth, options.outHeight) / options.inSampleSize > 2048) options.inSampleSize *= 2
+                        val bitmap = BitmapFactory.decodeFile(temp.absolutePath, options)
+                            ?: throw IOException("This PNG image could not be read")
+                        bitmap.recycle()
+                    } else {
+                        val extractor = MediaExtractor()
+                        try {
+                            extractor.setDataSource(temp.absolutePath)
+                            check((0 until extractor.trackCount).any {
+                                val mime = extractor.getTrackFormat(it).getString(MediaFormat.KEY_MIME).orEmpty()
+                                mime.startsWith("audio/") || mime.startsWith("video/")
+                            }) { "This file has no readable media tracks" }
+                        } finally { extractor.release() }
+                    }
                     val destination = File(directory, "Import-${UUID.randomUUID()}.$extension")
                     if (!temp.renameTo(destination)) throw IOException("Cannot save imported clip")
                     refresh()

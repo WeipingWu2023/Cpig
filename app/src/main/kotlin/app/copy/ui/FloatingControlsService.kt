@@ -15,6 +15,7 @@ import android.os.IBinder
 import android.provider.Settings
 import android.view.Gravity
 import android.view.MotionEvent
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.compose.foundation.Image
@@ -86,6 +87,9 @@ object FloatingControls {
         context.stopService(Intent(context, FloatingControlsService::class.java))
     }
     internal fun setVisible(value: Boolean) { shown.value = value }
+    fun takeScreenshot(context: Context) {
+        context.startService(Intent(context, FloatingControlsService::class.java).setAction(FloatingControlsService.SCREENSHOT))
+    }
 }
 
 /** A small Compose window hosted by Android's supported overlay API. */
@@ -112,6 +116,14 @@ class FloatingControlsService : Service(), LifecycleOwner, SavedStateRegistryOwn
     override fun onBind(intent: Intent?): IBinder? = null
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == HIDE) { FloatingControls.hide(this); return START_NOT_STICKY }
+        if (intent?.action == SCREENSHOT) {
+            if (capture.phase.value == CapturePhase.Ready && !capture.requestingConsent.value) {
+                expanded = false
+                overlay?.visibility = View.INVISIBLE
+                capture.screenshot()
+            }
+            return START_NOT_STICKY
+        }
         try {
             val notifications = getSystemService(NotificationManager::class.java)
             notifications.createNotificationChannel(NotificationChannel(CHANNEL, getString(R.string.floating_channel), NotificationManager.IMPORTANCE_LOW))
@@ -148,6 +160,7 @@ class FloatingControlsService : Service(), LifecycleOwner, SavedStateRegistryOwn
                 val requesting by capture.requestingConsent.collectAsStateWithLifecycle()
                 val message by capture.message.collectAsStateWithLifecycle()
                 LaunchedEffect(phase) {
+                    if (phase == CapturePhase.Idle || phase == CapturePhase.Ready) visibility = View.VISIBLE
                     // Consent only prepares capture. Keep Record now visible until the user is ready.
                     expanded = phase == CapturePhase.Ready
                 }
@@ -161,8 +174,14 @@ class FloatingControlsService : Service(), LifecycleOwner, SavedStateRegistryOwn
                     FloatingRecorder(phase, requesting, message, expanded,
                         onExpand = { expanded = true }, onCollapse = { expanded = false },
                         onRecord = {
-                            if (phase == CapturePhase.Ready) { expanded = false; capture.record() }
+                            if (phase == CapturePhase.Ready && checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                                expanded = false; capture.record()
+                            }
                             else CapturePermissionActivity.launch(this@FloatingControlsService)
+                        },
+                        onScreenshot = {
+                            if (phase == CapturePhase.Ready) FloatingControls.takeScreenshot(this@FloatingControlsService)
+                            else CapturePermissionActivity.launch(this@FloatingControlsService, screenshotOnly = true)
                         },
                         onStop = { expanded = false; capture.stop() }, onDrag = ::moveWindow,
                         onDragStart = { dragging = true }, onDragEnd = ::finishDrag)
@@ -242,13 +261,14 @@ class FloatingControlsService : Service(), LifecycleOwner, SavedStateRegistryOwn
         private const val CHANNEL = "floating_controls"
         private const val NOTIFICATION_ID = 2
         private const val HIDE = "app.copy.HIDE_FLOATING"
+        internal const val SCREENSHOT = "app.copy.FLOATING_SCREENSHOT"
     }
 }
 
 @Composable
 private fun FloatingRecorder(
     phase: CapturePhase, requesting: Boolean, message: String?, expanded: Boolean,
-    onExpand: () -> Unit, onCollapse: () -> Unit, onRecord: () -> Unit, onStop: () -> Unit,
+    onExpand: () -> Unit, onCollapse: () -> Unit, onRecord: () -> Unit, onScreenshot: () -> Unit, onStop: () -> Unit,
     onDrag: (Float, Float) -> Unit, onDragStart: () -> Unit, onDragEnd: () -> Unit,
 ) {
     val status = if (requesting) stringResource(R.string.approve_capture)
@@ -299,6 +319,10 @@ private fun FloatingRecorder(
             }
             Text(status, style = MaterialTheme.typography.labelSmall, maxLines = 3, overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(horizontal = 8.dp))
+            TextButton(onClick = onScreenshot,
+                enabled = !requesting && phase in listOf(CapturePhase.Idle, CapturePhase.Ready)) {
+                Text(stringResource(if (phase == CapturePhase.Ready) R.string.take_screenshot else R.string.setup_screenshot))
+            }
             if (phase == CapturePhase.Ready) TextButton(onClick = onStop) { Text(stringResource(R.string.cancel_setup)) }
         }
     }

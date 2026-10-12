@@ -45,6 +45,22 @@ public final class AndroidSenderInterop {
         String token = value(prepared, "jvm-file");
         post(pinned, "upload", "?sessionId=" + session + "&fileId=jvm-file&token=" + token, payload);
         check(Arrays.equals(payload, Files.readAllBytes(folder.resolve("android-interop.mp4"))), "actual Android HTTPS class uploaded exact bytes with SHA-256");
+        var image = new java.awt.image.BufferedImage(32, 16, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+        for (int y = 0; y < 16; y++) for (int x = 0; x < 32; x++) image.setRGB(x, y, 0xffaa315f + x * 256 + y);
+        var pngOutput = new java.io.ByteArrayOutputStream();
+        javax.imageio.ImageIO.write(image, "png", pngOutput);
+        byte[] png = pngOutput.toByteArray();
+        String pngHash = HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(png));
+        String pngMetadata = "{\"info\":{\"alias\":\"Android PNG test\",\"version\":\"2.2\"},"
+            + "\"files\":{\"png-file\":{\"id\":\"png-file\",\"fileName\":\"screenshot-interop.png\",\"size\":"
+            + png.length + ",\"fileType\":\"image/png\",\"sha256\":\"" + pngHash + "\"}}}";
+        String pngPrepared = post(pinned, "prepare-upload", "?pin=" + pin, pngMetadata.getBytes(StandardCharsets.UTF_8));
+        post(pinned, "upload", "?sessionId=" + value(pngPrepared, "sessionId")
+            + "&fileId=png-file&token=" + value(pngPrepared, "png-file"), png);
+        Path receivedPng = folder.resolve("screenshot-interop.png");
+        check(Arrays.equals(png, Files.readAllBytes(receivedPng))
+            && javax.imageio.ImageIO.read(receivedPng.toFile()).getRGB(31, 15) == image.getRGB(31, 15),
+            "PNG screenshot transferred with exact bytes and readable pixels");
         System.out.println("Android/Windows protocol interoperability checks passed.");
     }
 

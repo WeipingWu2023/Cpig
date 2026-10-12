@@ -73,6 +73,7 @@ fun CopyScreen(
     floatingVisible: Boolean,
     onFloating: () -> Unit,
     onRecord: () -> Unit,
+    onScreenshot: () -> Unit,
     onStop: () -> Unit,
     onImport: () -> Unit,
     onPreview: (Clip) -> Unit,
@@ -134,6 +135,12 @@ fun CopyScreen(
                             Text(stringResource(R.string.record_clip))
                         }
                     }
+                    OutlinedButton(onClick = onScreenshot,
+                        enabled = !state.requestingConsent && state.capturePhase in listOf(CapturePhase.Idle, CapturePhase.Ready),
+                        modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(if (state.capturePhase == CapturePhase.Ready) R.string.take_screenshot else R.string.setup_screenshot))
+                    }
+                    Text(stringResource(R.string.screenshot_help), style = MaterialTheme.typography.bodyMedium)
                     OutlinedButton(onClick = onImport, enabled = !state.importing, modifier = Modifier.fillMaxWidth()) {
                         Text(stringResource(R.string.import_media))
                     }
@@ -149,7 +156,9 @@ fun CopyScreen(
                         Text(clip.name, style = MaterialTheme.typography.titleMedium)
                         Text(stringResource(R.string.clip_size, clip.sizeBytes / 1_000_000.0), style = MaterialTheme.typography.bodySmall)
                         if (clip.audioAppearsSilent) Text(stringResource(R.string.silent_warning), color = MaterialTheme.colorScheme.error)
-                        OutlinedButton(onClick = { onPreview(clip) }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.preview_clip)) }
+                        OutlinedButton(onClick = { onPreview(clip) }, modifier = Modifier.fillMaxWidth()) {
+                            Text(stringResource(if (clip.mimeType.startsWith("image/")) R.string.preview_image else R.string.preview_clip))
+                        }
                         Button(onClick = { onShare(clip) }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.share_clip)) }
                         OutlinedButton(onClick = { onSendToComputer(clip) }, enabled = !state.lan.transfer.active,
                             modifier = Modifier.fillMaxWidth()) { Text("Send to computer") }
@@ -164,4 +173,4 @@ fun CopyScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun CopyPreview() { CopyTheme { CopyScreen(CopyUiState(), false, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { _, _ -> }, {}) } }
+private fun CopyPreview() { CopyTheme { CopyScreen(CopyUiState(), false, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, { _, _ -> }, {}) } }

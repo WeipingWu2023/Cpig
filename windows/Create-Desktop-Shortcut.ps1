@@ -8,7 +8,8 @@ $shell = New-Object -ComObject WScript.Shell
 $shortcut = $shell.CreateShortcut((Join-Path $desktopPath 'Copig Receiver.lnk'))
 $shortcut.TargetPath = $receiverPath
 $shortcut.WorkingDirectory = $PSScriptRoot
-$shortcut.IconLocation = "$receiverPath,0"
+$iconPath = Join-Path $PSScriptRoot 'copig.ico'
+$shortcut.IconLocation = if (Test-Path -LiteralPath $iconPath) { "$iconPath,0" } else { "$receiverPath,0" }
 $shortcut.Description = 'Copig: receive clips from your phone over Wi-Fi'
 $shortcut.Save()
 Write-Host 'Created Copig Receiver on your desktop.'

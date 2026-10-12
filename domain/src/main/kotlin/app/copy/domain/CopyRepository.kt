@@ -16,5 +16,6 @@ interface CaptureController {
     val message: StateFlow<String?>
     val requestingConsent: StateFlow<Boolean>
     fun record()
+    fun screenshot()
     fun stop()
 }

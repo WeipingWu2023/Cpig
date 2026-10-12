@@ -76,6 +76,7 @@ class CopyViewModel(
     }
     fun endCaptureRequest() { operation.value = operation.value.copy(consent = false) }
     fun record() { capture.record() }
+    fun screenshot() { capture.screenshot() }
     fun stop() { capture.stop() }
     fun importClip(uri: String) = viewModelScope.launch {
         perform("Import failed") { clips.importClip(uri); showMessage("Imported. Preview before sharing.") }

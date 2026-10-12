@@ -16,7 +16,7 @@ Native Android app, Android 10 or newer. Device compatibility must be verified o
 4. Preview the saved clip and check that audio is present.
 5. Send the recording directly to the Windows receiver on the same local network, share it to a compatible destination, or export it for use with an AI workflow. Receiving apps determine which file types they accept.
 
-Also accept shared video/audio files. Shared URLs are not downloaded or bookmarked in this release.
+Also accept shared video/audio files and PNG images. The floating Screenshot action prepares consent, then Take screenshot saves one full-resolution PNG with the overlay briefly hidden. Screenshots use the same private library, export/share and Windows transfer flow as clips. Shared URLs are not downloaded or bookmarked in this release.
 
 Keep recordings local until the user explicitly chooses a clip and a receiver/share destination. Windows LAN transfers use encrypted streaming and a receiver PIN, with automatic discovery and a manual-IP fallback. Support preview and deletion. Clearly report failed captures and audio that appears silent; silence alone cannot establish that an app blocked capture.
 
@@ -25,7 +25,7 @@ Keep recordings local until the user explicitly chooses a clip and a receiver/sh
 - Screen capture uses MediaProjection with user consent for each session and a foreground service.
 - Internal playback capture uses AudioPlaybackCaptureConfiguration and AudioRecord on Android 10+; the source app's audio policy and audio usage must allow it.
 - Secure/protected surfaces may be absent from recordings. Copig cannot promise to capture every app.
-- Android 14 single-app sharing is preferred for excluding other app/system UI. Full-screen capture can include the floating recorder. Unused Ready setup expires after four minutes; fresh consent is required for each new clip.
+- Android 14 single-app sharing is preferred for excluding other app/system UI. Full-screen capture can include the floating recorder. Unused Ready setup expires after four minutes; fresh consent is required for each new clip or screenshot. Select Entire screen for screenshots across apps.
 - A new recording does not include content played before recording started. Replay the video first. A rolling buffer is a possible later feature and requires an already active recording session.
 - Native app save/share actions or importing an existing recording are fallbacks when direct capture fails.
 - Capture support for Douyin, WeChat Channels, and other source apps is unverified until tested on the actual device and content.

@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AssemblyName>Copig Receiver</AssemblyName>
-    <Version>0.4.2</Version>
+    <Version>0.5.0</Version>
     <ApplicationIcon>copig.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>

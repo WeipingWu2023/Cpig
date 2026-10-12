@@ -47,8 +47,8 @@ class MainActivity : ComponentActivity() {
             val floatingVisible by FloatingControls.visible.collectAsStateWithLifecycle()
             CopyTheme {
                 CopyScreen(state, floatingVisible = floatingVisible, onFloating = ::toggleFloatingControls,
-                    onRecord = ::record, onStop = viewModel::stop,
-                    onImport = { importFile.launch(arrayOf("video/*", "audio/*")) },
+                    onRecord = ::record, onScreenshot = ::screenshot, onStop = viewModel::stop,
+                    onImport = { importFile.launch(arrayOf("video/*", "audio/*", "image/png")) },
                     onPreview = { openClip(it, share = false) }, onShare = { openClip(it, share = true) },
                     onExport = ::export, onDelete = { viewModel.deleteClip(it.id) }, onCopyPrompt = ::copyPrompt,
                     onSendToComputer = viewModel::showTransfer, onDismissTransfer = viewModel::dismissTransfer,
@@ -68,9 +68,20 @@ class MainActivity : ComponentActivity() {
         else if (!Settings.canDrawOverlays(this) && FloatingControls.visible.value) FloatingControls.hide(this)
     }
     private fun record() {
-        if (container.capture.phase.value == app.copy.domain.CapturePhase.Ready) viewModel.record()
+        if (container.capture.phase.value == app.copy.domain.CapturePhase.Ready) {
+            if (checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) == android.content.pm.PackageManager.PERMISSION_GRANTED) viewModel.record()
+            else CapturePermissionActivity.launch(this)
+        }
         else if (viewModel.beginCaptureRequest()) {
             try { CapturePermissionActivity.launch(this) }
+            finally { viewModel.endCaptureRequest() }
+        }
+    }
+    private fun screenshot() {
+        if (container.capture.phase.value == app.copy.domain.CapturePhase.Ready) {
+            if (FloatingControls.visible.value) FloatingControls.takeScreenshot(this) else viewModel.screenshot()
+        } else if (viewModel.beginCaptureRequest()) {
+            try { CapturePermissionActivity.launch(this, screenshotOnly = true) }
             finally { viewModel.endCaptureRequest() }
         }
     }

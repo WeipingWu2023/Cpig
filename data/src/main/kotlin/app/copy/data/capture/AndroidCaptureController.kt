@@ -17,8 +17,8 @@ class AndroidCaptureController(private val context: Context) : CaptureController
     @Volatile internal var stopRequested = false
         private set
 
-    @Synchronized fun beginConsentRequest(): Boolean {
-        if (phase.value.active || mutableRequestingConsent.value) return false
+    @Synchronized fun beginConsentRequest(allowReady: Boolean = false): Boolean {
+        if ((phase.value.active && !(allowReady && phase.value == CapturePhase.Ready)) || mutableRequestingConsent.value) return false
         mutableRequestingConsent.value = true
         mutableMessage.value = null
         return true
@@ -48,6 +48,12 @@ class AndroidCaptureController(private val context: Context) : CaptureController
         // Reserve the transition before enqueueing the service action, ignoring repeated taps.
         mutablePhase.value = CapturePhase.Preparing
         sendAction(CaptureService.RECORD)
+    }
+
+    @Synchronized override fun screenshot() {
+        if (phase.value != CapturePhase.Ready || stopRequested || requestingConsent.value) return
+        mutablePhase.value = CapturePhase.Preparing
+        sendAction(CaptureService.SCREENSHOT)
     }
 
     @Synchronized override fun stop() {

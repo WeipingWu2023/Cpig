@@ -17,13 +17,15 @@ import app.copy.R
 /** Transparent permission boundary. Finishing returns to the video, with no library screen underneath. */
 class CapturePermissionActivity : ComponentActivity() {
     private val capture get() = (application as CopyApplication).container.capture
+    private val screenshotOnly get() = intent.getBooleanExtra(SCREENSHOT_ONLY, false)
+    private val recordReady get() = intent.getBooleanExtra(RECORD_READY, false)
     private val projection = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK && result.data != null) capture.prepare(result.resultCode, requireNotNull(result.data))
         else { capture.endConsentRequest(); capture.reportMessage(getString(R.string.capture_cancelled)) }
         finishAndRemoveTask()
     }
     private val permissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) requestProjection()
+        if (screenshotOnly || checkSelfPermission(Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) continueCapture()
         else { capture.endConsentRequest(); capture.reportMessage(getString(R.string.audio_permission_reason)); finishAndRemoveTask() }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,13 +33,21 @@ class CapturePermissionActivity : ComponentActivity() {
         confirmLaunch()
         if (savedInstanceState != null) return
         val requested = mutableListOf<String>()
-        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) requested += Manifest.permission.RECORD_AUDIO
+        if (!screenshotOnly && checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) requested += Manifest.permission.RECORD_AUDIO
         if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) requested += Manifest.permission.POST_NOTIFICATIONS
         try {
-            if (requested.isEmpty()) requestProjection() else permissions.launch(requested.toTypedArray())
+            if (requested.isEmpty()) continueCapture() else permissions.launch(requested.toTypedArray())
         } catch (error: RuntimeException) {
             capture.endConsentRequest(); capture.reportMessage("Could not request permission: ${error.message}"); finishAndRemoveTask()
         }
+    }
+    private fun continueCapture() {
+        if (recordReady) {
+            capture.endConsentRequest()
+            if (capture.phase.value == app.copy.domain.CapturePhase.Ready) capture.record()
+            else capture.reportMessage("Capture setup expired. Approve capture again.")
+            finishAndRemoveTask()
+        } else requestProjection()
     }
     private fun requestProjection() {
         try { projection.launch(getSystemService(MediaProjectionManager::class.java).createScreenCaptureIntent()) }
@@ -50,15 +60,18 @@ class CapturePermissionActivity : ComponentActivity() {
         super.onDestroy()
     }
     companion object {
+        private const val SCREENSHOT_ONLY = "screenshotOnly"
+        private const val RECORD_READY = "recordReady"
         private val handler = Handler(Looper.getMainLooper())
         private var launchWatchdog: Runnable? = null
         private fun confirmLaunch() {
             launchWatchdog?.let(handler::removeCallbacks)
             launchWatchdog = null
         }
-        fun launch(context: Context) {
+        fun launch(context: Context, screenshotOnly: Boolean = false) {
             val capture = (context.applicationContext as CopyApplication).container.capture
-            if (!capture.beginConsentRequest()) return
+            val recordReady = !screenshotOnly && capture.phase.value == app.copy.domain.CapturePhase.Ready
+            if (!capture.beginConsentRequest(allowReady = recordReady)) return
             // Some phones silently block background popups without throwing an exception.
             launchWatchdog = Runnable {
                 capture.endConsentRequest()
@@ -67,6 +80,7 @@ class CapturePermissionActivity : ComponentActivity() {
             }.also { handler.postDelayed(it, 5_000) }
             try {
                 context.startActivity(Intent(context, CapturePermissionActivity::class.java)
+                    .putExtra(SCREENSHOT_ONLY, screenshotOnly).putExtra(RECORD_READY, recordReady)
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK or Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS))
             } catch (error: RuntimeException) {
                 confirmLaunch()
